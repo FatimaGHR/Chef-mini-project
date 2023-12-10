@@ -21,7 +21,7 @@
           $reciepes=db_update($connection,"reciepes",$data,$where);
         // print_r($result);
         if($reciepes > 0){
-            header("Location: " .ROOT_PATH);
+            header("Location: " .ROOT_PATH."category");
             exit;
         }
     }
@@ -138,18 +138,33 @@ font-size: 20px;
 <br><br><br><br><br><br><br><br><br><br>
     <select name="dropdown"id="selectcontry">
     <?php
+    $reciepeId = $_GET['id'];
     $connection = db_connect($db_server, $db_user, $db_user_pass, $db_name);
+    $checkId = array(
+        "column" => "id",
+        "operator" => "=",
+        "value" => $reciepeId
+      );
+      $where[] = $checkId;
+      $reciepes=db_select($connection,"reciepes","*",$where);
        $res=db_select($connection,"countries");
        if($res > 0){
-        foreach($res as $value){?>
+        foreach($res as $value){
+        if($reciepes[0]['country_id']==$value['id']){
+
         
-        <option value="<?php echo $value['id'] ?>"><?php echo $value['name'] ?> </option>
-        <?php }}?>
+        ?>
+        <option selected value="<?php echo $value['id'] ?>"><?php echo $value['name'] ?> </option>
+        <?php } else{
+            ?>
+<option  value="<?php echo $value['id'] ?>"><?php echo $value['name'] ?> </option>
+            <?php
+        }}}?>
         
     </select><br><br>
     
     <?php
-$reciepeId = $_GET['id'];
+
 
 $connection = db_connect($db_server, $db_user, $db_user_pass, $db_name);
 $checkId = array(
